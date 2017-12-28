@@ -1,0 +1,39 @@
+<html>
+<body>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+<script>
+	function convert(){
+	$.ajax({
+		url:'http://w3c.github.io/html/entities.json',
+		type:'GET',
+		
+		success:function(ok){
+			var res = '';
+			var okArr = [];
+			for(var item in ok){
+				okArr.push({ name:item, value:ok[item] });
+			}
+			
+			for(var i=0;i<okArr.length;i++){
+				if (i>0 && ( okArr[i].name.replace('&','').replace(';','') === okArr[i-1].name.replace('&','').replace(';','')  ))
+					{
+						//skip
+					}
+				else 
+					res+='<!ENTITY '+ okArr[i].name.replace('&','').replace(';','')+' "&#'+ okArr[i].value.codepoints[0] +';" >\n';
+			}
+			$('#output').val(res);
+		},
+		error:function(err){}
+	});
+}
+</script>
+
+<button onclick="convert()" >Convert!</button><br>
+<textarea id="output" style="background-color:silver; width:600px;height:700px;">
+</textarea>
+</body>
+</html>
